@@ -10,14 +10,22 @@ const BLOCK_GAP = 4;
 const BLOCK_TOP_MARGIN = 60;
 const BLOCK_LEFT_MARGIN = 10;
 
+const INITIAL_PADDLE = { x: 319, y: 560, w: 162, h: 14, speed: 7 };
+const INITIAL_BALL = { x: 400, y: 300, w: 16, h: 16, vx: 4, vy: -4 };
+
 const state = {
   status: 'playing', // 'playing' | 'gameover' | 'win'
   score: 0,
   lives: 3,
-  paddle: { x: 319, y: 560, w: 162, h: 14, speed: 7 },
-  ball: { x: 400, y: 300, w: 16, h: 16, vx: 4, vy: -4 },
+  paddle: { ...INITIAL_PADDLE },
+  ball: { ...INITIAL_BALL },
   blocks: [],
 };
+
+function resetPaddleAndBall() {
+  state.paddle = { ...INITIAL_PADDLE };
+  state.ball = { ...INITIAL_BALL };
+}
 
 function createBlocks() {
   const blocks = [];
@@ -109,6 +117,17 @@ function handleBlockCollision() {
   }
 }
 
+function handleBallOutOfBounds() {
+  if ( state.ball.y <= canvas.height ) return;
+
+  state.lives--;
+  resetPaddleAndBall();
+
+  if ( state.lives <= 0 ) {
+    state.status = 'gameover';
+  }
+}
+
 function update() {
   const paddle = state.paddle;
   const ball = state.ball;
@@ -125,6 +144,7 @@ function update() {
 
   handlePaddleCollision();
   handleBlockCollision();
+  handleBallOutOfBounds();
 }
 
 function drawHUD() {
