@@ -127,8 +127,18 @@ function update() {
   handleBlockCollision();
 }
 
+function drawHUD() {
+  ctx.fillStyle = 'white';
+  ctx.font = '16px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText( `Score: ${ state.score }`, 10, 20 );
+  ctx.textAlign = 'right';
+  ctx.fillText( `Lives: ${ state.lives }`, 790, 20 );
+}
+
 function render() {
   ctx.clearRect( 0, 0, canvas.width, canvas.height );
+  drawHUD();
   drawSprite( ctx, 'paddle', state.paddle.x, state.paddle.y, state.paddle.w, state.paddle.h );
   drawSprite( ctx, 'ball', state.ball.x, state.ball.y, state.ball.w, state.ball.h );
   state.blocks.forEach( block => {
