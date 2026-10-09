@@ -38,8 +38,36 @@ function createBlocks() {
 
 state.blocks = createBlocks();
 
+const keys = { left: false, right: false };
+
+window.addEventListener( 'keydown', e => {
+  if ( e.key === 'ArrowLeft' ) keys.left = true;
+  if ( e.key === 'ArrowRight' ) keys.right = true;
+} );
+
+window.addEventListener( 'keyup', e => {
+  if ( e.key === 'ArrowLeft' ) keys.left = false;
+  if ( e.key === 'ArrowRight' ) keys.right = false;
+} );
+
+canvas.addEventListener( 'mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  state.paddle.x = mouseX - state.paddle.w / 2;
+  clampPaddle();
+} );
+
+function clampPaddle() {
+  state.paddle.x = Math.max( 0, Math.min( canvas.width - state.paddle.w, state.paddle.x ) );
+}
+
 function update() {
+  const paddle = state.paddle;
   const ball = state.ball;
+
+  if ( keys.left ) paddle.x -= paddle.speed;
+  if ( keys.right ) paddle.x += paddle.speed;
+  clampPaddle();
 
   ball.x += ball.vx;
   ball.y += ball.vy;
