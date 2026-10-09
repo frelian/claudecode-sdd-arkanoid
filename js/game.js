@@ -117,6 +117,12 @@ function handleBlockCollision() {
   }
 }
 
+function checkWinCondition() {
+  if ( state.blocks.every( block => !block.alive ) ) {
+    state.status = 'win';
+  }
+}
+
 function handleBallOutOfBounds() {
   if ( state.ball.y <= canvas.height ) return;
 
@@ -144,6 +150,7 @@ function update() {
 
   handlePaddleCollision();
   handleBlockCollision();
+  checkWinCondition();
   handleBallOutOfBounds();
 }
 
