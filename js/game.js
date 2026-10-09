@@ -84,6 +84,31 @@ function handlePaddleCollision() {
   ball.y = paddle.y - ball.h;
 }
 
+const SCORE_PER_BLOCK = 10;
+
+function handleBlockCollision() {
+  const ball = state.ball;
+
+  for ( const block of state.blocks ) {
+    if ( !block.alive ) continue;
+
+    const overlapX = Math.min( ball.x + ball.w, block.x + block.w ) - Math.max( ball.x, block.x );
+    const overlapY = Math.min( ball.y + ball.h, block.y + block.h ) - Math.max( ball.y, block.y );
+
+    if ( overlapX <= 0 || overlapY <= 0 ) continue;
+
+    block.alive = false;
+    state.score += SCORE_PER_BLOCK;
+
+    if ( overlapX < overlapY ) {
+      ball.vx *= -1;
+    } else {
+      ball.vy *= -1;
+    }
+    break;
+  }
+}
+
 function update() {
   const paddle = state.paddle;
   const ball = state.ball;
@@ -99,6 +124,7 @@ function update() {
   if ( ball.y <= 0 ) ball.vy *= -1;
 
   handlePaddleCollision();
+  handleBlockCollision();
 }
 
 function render() {
