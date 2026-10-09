@@ -38,7 +38,17 @@ function createBlocks() {
 
 state.blocks = createBlocks();
 
-function draw() {
+function update() {
+  const ball = state.ball;
+
+  ball.x += ball.vx;
+  ball.y += ball.vy;
+
+  if ( ball.x <= 0 || ball.x + ball.w >= canvas.width ) ball.vx *= -1;
+  if ( ball.y <= 0 ) ball.vy *= -1;
+}
+
+function render() {
   ctx.clearRect( 0, 0, canvas.width, canvas.height );
   drawSprite( ctx, 'paddle', state.paddle.x, state.paddle.y, state.paddle.w, state.paddle.h );
   drawSprite( ctx, 'ball', state.ball.x, state.ball.y, state.ball.w, state.ball.h );
@@ -47,4 +57,10 @@ function draw() {
   } );
 }
 
-loadSpritesheet( draw );
+function loop() {
+  update();
+  render();
+  requestAnimationFrame( loop );
+}
+
+loadSpritesheet( loop );
