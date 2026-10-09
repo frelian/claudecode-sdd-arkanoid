@@ -1,6 +1,6 @@
 # SPEC 01 — Loop básico del juego (paddle, bola, bloques, vidas y HUD)
 
-> **Status:** Borrador
+> **Status:** Aprobado
 > **Depends on:** (ninguno)
 > **Date:** 2026-10-08
 > **Objective:** Implementar el loop jugable mínimo de Arkanoid con paddle, bola, un grid fijo de bloques, sistema de 3 vidas, HUD de score/vidas y overlays de victoria/derrota con reinicio.
