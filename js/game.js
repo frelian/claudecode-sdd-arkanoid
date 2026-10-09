@@ -135,6 +135,8 @@ function handleBallOutOfBounds() {
 }
 
 function update() {
+  if ( state.status !== 'playing' ) return;
+
   const paddle = state.paddle;
   const ball = state.ball;
 
@@ -163,6 +165,24 @@ function drawHUD() {
   ctx.fillText( `Lives: ${ state.lives }`, 790, 20 );
 }
 
+function drawOverlay() {
+  if ( state.status === 'playing' ) return;
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect( 0, 0, canvas.width, canvas.height );
+
+  const message = state.status === 'win' ? 'YOU WIN' : 'GAME OVER';
+
+  ctx.fillStyle = 'white';
+  ctx.textAlign = 'center';
+  ctx.font = '48px sans-serif';
+  ctx.fillText( message, canvas.width / 2, canvas.height / 2 - 40 );
+
+  ctx.font = '24px sans-serif';
+  ctx.fillText( `Score: ${ state.score }`, canvas.width / 2, canvas.height / 2 + 10 );
+  ctx.fillText( 'Press R to restart', canvas.width / 2, canvas.height / 2 + 50 );
+}
+
 function render() {
   ctx.clearRect( 0, 0, canvas.width, canvas.height );
   drawHUD();
@@ -171,6 +191,7 @@ function render() {
   state.blocks.forEach( block => {
     if ( block.alive ) drawSprite( ctx, `block_${ block.color }`, block.x, block.y, block.w, block.h );
   } );
+  drawOverlay();
 }
 
 function loop() {
