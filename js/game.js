@@ -61,6 +61,29 @@ function clampPaddle() {
   state.paddle.x = Math.max( 0, Math.min( canvas.width - state.paddle.w, state.paddle.x ) );
 }
 
+const PADDLE_MAX_BOUNCE_VX = 6;
+
+function handlePaddleCollision() {
+  const paddle = state.paddle;
+  const ball = state.ball;
+
+  const collides = ball.vy > 0 &&
+    ball.x + ball.w >= paddle.x &&
+    ball.x <= paddle.x + paddle.w &&
+    ball.y + ball.h >= paddle.y &&
+    ball.y + ball.h <= paddle.y + paddle.h;
+
+  if ( !collides ) return;
+
+  const ballCenterX = ball.x + ball.w / 2;
+  const paddleCenterX = paddle.x + paddle.w / 2;
+  const relativeIntersectX = ( ballCenterX - paddleCenterX ) / ( paddle.w / 2 );
+
+  ball.vx = relativeIntersectX * PADDLE_MAX_BOUNCE_VX;
+  ball.vy = -Math.abs( ball.vy );
+  ball.y = paddle.y - ball.h;
+}
+
 function update() {
   const paddle = state.paddle;
   const ball = state.ball;
@@ -74,6 +97,8 @@ function update() {
 
   if ( ball.x <= 0 || ball.x + ball.w >= canvas.width ) ball.vx *= -1;
   if ( ball.y <= 0 ) ball.vy *= -1;
+
+  handlePaddleCollision();
 }
 
 function render() {
