@@ -46,11 +46,23 @@ function createBlocks() {
 
 state.blocks = createBlocks();
 
+function restartGame() {
+  if ( state.status === 'playing' ) return;
+
+  state.score = 0;
+  state.lives = 3;
+  state.blocks = createBlocks();
+  resetPaddleAndBall();
+  state.status = 'playing';
+}
+
 const keys = { left: false, right: false };
 
 window.addEventListener( 'keydown', e => {
   if ( e.key === 'ArrowLeft' ) keys.left = true;
   if ( e.key === 'ArrowRight' ) keys.right = true;
+
+  if ( e.key === 'r' || e.key === 'R' ) restartGame();
 } );
 
 window.addEventListener( 'keyup', e => {
