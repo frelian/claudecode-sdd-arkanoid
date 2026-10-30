@@ -11,7 +11,7 @@ const BLOCK_TOP_MARGIN = 60;
 const BLOCK_LEFT_MARGIN = 10;
 
 const INITIAL_PADDLE = { x: 319, y: 560, w: 162, h: 14, speed: 7 };
-const INITIAL_BALL = { x: 400, y: 300, w: 16, h: 16, vx: 4, vy: -4 };
+const INITIAL_BALL = { x: 400, y: 300, w: 16, h: 16, vx: 2, vy: -2 };
 
 const state = {
   status: 'playing', // 'playing' | 'gameover' | 'win'
@@ -168,13 +168,23 @@ function update() {
   handleBallOutOfBounds();
 }
 
+const LIFE_ICON_SIZE = 16;
+const LIFE_ICON_GAP = 6;
+const LIFE_ICONS_RIGHT_EDGE = 790;
+const LIFE_ICONS_Y = 6;
+
 function drawHUD() {
   ctx.fillStyle = 'white';
   ctx.font = '16px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText( `Score: ${ state.score }`, 10, 20 );
-  ctx.textAlign = 'right';
-  ctx.fillText( `Lives: ${ state.lives }`, 790, 20 );
+
+  const iconsWidth = state.lives * LIFE_ICON_SIZE + Math.max( 0, state.lives - 1 ) * LIFE_ICON_GAP;
+  let iconX = LIFE_ICONS_RIGHT_EDGE - iconsWidth;
+  for ( let i = 0; i < state.lives; i++ ) {
+    drawSprite( ctx, 'ball', iconX, LIFE_ICONS_Y, LIFE_ICON_SIZE, LIFE_ICON_SIZE );
+    iconX += LIFE_ICON_SIZE + LIFE_ICON_GAP;
+  }
 }
 
 function drawOverlay() {
