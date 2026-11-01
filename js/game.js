@@ -20,6 +20,7 @@ const state = {
   paddle: { ...INITIAL_PADDLE },
   ball: { ...INITIAL_BALL },
   blocks: [],
+  explosions: [],
 };
 
 function resetPaddleAndBall() {
@@ -52,6 +53,7 @@ function restartGame() {
   state.score = 0;
   state.lives = 3;
   state.blocks = createBlocks();
+  state.explosions = [];
   resetPaddleAndBall();
   state.status = 'playing';
 }
@@ -106,6 +108,17 @@ function handlePaddleCollision() {
 
 const SCORE_PER_BLOCK = 10;
 
+function spawnExplosion( block ) {
+  state.explosions.push( {
+    x: block.x,
+    y: block.y,
+    w: block.w,
+    h: block.h,
+    color: block.color,
+    startTime: performance.now(),
+  } );
+}
+
 function handleBlockCollision() {
   const ball = state.ball;
 
@@ -118,6 +131,7 @@ function handleBlockCollision() {
     if ( overlapX <= 0 || overlapY <= 0 ) continue;
 
     block.alive = false;
+    spawnExplosion( block );
     state.score += SCORE_PER_BLOCK;
 
     if ( overlapX < overlapY ) {
@@ -127,6 +141,14 @@ function handleBlockCollision() {
     }
     break;
   }
+}
+
+function updateExplosions() {
+  const frameDuration = EXPLOSION_DURATION / 4;
+  state.explosions = state.explosions.filter( explosion => {
+    const frame = Math.floor( ( performance.now() - explosion.startTime ) / frameDuration );
+    return frame < 4;
+  } );
 }
 
 function checkWinCondition() {
@@ -164,6 +186,7 @@ function update() {
 
   handlePaddleCollision();
   handleBlockCollision();
+  updateExplosions();
   checkWinCondition();
   handleBallOutOfBounds();
 }
@@ -205,6 +228,15 @@ function drawOverlay() {
   ctx.fillText( 'Press R to restart', canvas.width / 2, canvas.height / 2 + 50 );
 }
 
+function drawExplosions() {
+  const frameDuration = EXPLOSION_DURATION / 4;
+  state.explosions.forEach( explosion => {
+    const frameIndex = Math.floor( ( performance.now() - explosion.startTime ) / frameDuration );
+    const frame = EXPLOSION_FRAMES[ explosion.color ][ frameIndex ];
+    drawFrame( ctx, frame, explosion.x, explosion.y, explosion.w, explosion.h );
+  } );
+}
+
 function render() {
   ctx.clearRect( 0, 0, canvas.width, canvas.height );
   drawHUD();
@@ -213,6 +245,7 @@ function render() {
   state.blocks.forEach( block => {
     if ( block.alive ) drawSprite( ctx, `block_${ block.color }`, block.x, block.y, block.w, block.h );
   } );
+  drawExplosions();
   drawOverlay();
 }
 

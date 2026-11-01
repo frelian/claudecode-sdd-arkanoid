@@ -1,6 +1,6 @@
 # SPEC 02 — Animación de explosión al destruir bloques
 
-> **Status:** Draft
+> **Status:** Implemented
 > **Depends on:** SPEC 01
 > **Date:** 2026-10-29
 > **Objective:** Reproducir la animación de explosión de 4 frames (ya provista en `assets/spritesheet.js`) en la posición de cada bloque destruido, con timing basado en tiempo real.
@@ -50,12 +50,12 @@ Conventions:
 
 ## Acceptance criteria
 
-- [ ] Al romper un bloque, en su posición se reproduce la animación de explosión de 4 frames del color correspondiente (`EXPLOSION_FRAMES[color]`).
-- [ ] La animación dura en total ~150ms (`EXPLOSION_DURATION`) y luego desaparece sin dejar rastro visual.
-- [ ] Romper varios bloques en sucesión rápida muestra varias explosiones simultáneas, cada una avanzando de forma independiente según su propio `startTime`.
-- [ ] El score, las vidas y el resto de la mecánica de colisión (bola/paddle/bloques) funcionan igual que antes de este spec.
-- [ ] Reiniciar el juego con la tecla `R` limpia cualquier explosión en curso (`state.explosions` queda vacío).
-- [ ] No hay errores en la consola del navegador durante la rotura de bloques ni durante el reinicio.
+- [x] Al romper un bloque, en su posición se reproduce la animación de explosión de 4 frames del color correspondiente (`EXPLOSION_FRAMES[color]`).
+- [x] La animación dura en total ~150ms (`EXPLOSION_DURATION`) y luego desaparece sin dejar rastro visual.
+- [x] Romper varios bloques en sucesión rápida muestra varias explosiones simultáneas, cada una avanzando de forma independiente según su propio `startTime`.
+- [x] El score, las vidas y el resto de la mecánica de colisión (bola/paddle/bloques) funcionan igual que antes de este spec.
+- [x] Reiniciar el juego con la tecla `R` limpia cualquier explosión en curso (`state.explosions` queda vacío).
+- [x] No hay errores en la consola del navegador durante la rotura de bloques ni durante el reinicio.
 
 ## Decisions
 
